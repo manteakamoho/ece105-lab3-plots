@@ -54,9 +54,109 @@ def generate_data(seed: int | None = 9064):
     return t, sensor_a, sensor_b
 
 
+def plot_scatter(timestamps, sensor_a, sensor_b, ax) -> None:
+    """Draw a scatter plot of two sensors against time on an existing Axes.
+
+    Parameters
+    ----------
+    timestamps : array-like, shape (n,)
+        Time values corresponding to the sensor readings (seconds).
+
+    sensor_a : array-like, shape (n,)
+        Temperature readings for Sensor A in degrees Celsius.
+
+    sensor_b : array-like, shape (n,)
+        Temperature readings for Sensor B in degrees Celsius.
+
+    ax : matplotlib.axes.Axes
+        Axes object to draw the scatter plot on. This function modifies
+        the Axes in place and returns ``None``.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    The function uses semi-transparent, distinct markers and colors to
+    mirror the notebook's style and calls Axes methods so it works when
+    embedding plots into larger figures.
+    """
+    # Convert inputs to numpy arrays for shape checks and numeric operations
+    t = np.asarray(timestamps)
+    a = np.asarray(sensor_a)
+    b = np.asarray(sensor_b)
+
+    if t.shape != a.shape or a.shape != b.shape:
+        raise ValueError("timestamps, sensor_a, and sensor_b must have the same shape")
+
+    # Draw scatter points (styles chosen to match the notebook)
+    ax.scatter(t, a, s=40, alpha=0.7, c='tab:blue', marker='o', label='Sensor A')
+    ax.scatter(t, b, s=40, alpha=0.7, c='tab:orange', marker='x', label='Sensor B')
+
+    # Labels, legend, grid and title mirror the notebook cell
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Temperature (°C)')
+    ax.set_title('Sensor readings (scatter)')
+    ax.legend()
+    ax.grid(True)
+
+
 if __name__ == "__main__":
     # quick smoke-test when run as a script
     t, a, b = generate_data(9064)
     print("t.shape:", t.shape, "a.shape:", a.shape, "b.shape:", b.shape)
     print(f"Sensor A mean={a.mean():.2f}, std={a.std():.2f}")
     print(f"Sensor B mean={b.mean():.2f}, std={b.std():.2f}")
+
+# Create plot_scatter(sensor_a, sensor_b, timestamps, ax) that draws
+# the scatter plot from the notebook onto the given Axes object.
+# NumPy-style docstring. Modifies ax in place, returns None.
+
+def plot_scatter(timestamps, sensor_a, sensor_b, ax) -> None:
+    """Draw a scatter plot of two sensors against time on an existing Axes.
+
+    Parameters
+    ----------
+    timestamps : array-like, shape (n,)
+        Time values corresponding to the sensor readings (seconds).
+
+    sensor_a : array-like, shape (n,)
+        Temperature readings for Sensor A in degrees Celsius.
+
+    sensor_b : array-like, shape (n,)
+        Temperature readings for Sensor B in degrees Celsius.
+
+    ax : matplotlib.axes.Axes
+        Axes object to draw the scatter plot on. This function modifies
+        the Axes in place and returns ``None``.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    The function uses semi-transparent, distinct markers and colors to
+    mirror the notebook's style and calls Axes methods so it works when
+    embedding plots into larger figures.
+    """
+    # Convert inputs to numpy arrays for shape checks and numeric operations
+    t = np.asarray(timestamps)
+    a = np.asarray(sensor_a)
+    b = np.asarray(sensor_b)
+
+    if t.shape != a.shape or a.shape != b.shape:
+        raise ValueError("timestamps, sensor_a, and sensor_b must have the same shape")
+
+    # Draw scatter points (styles chosen to match the notebook)
+    ax.scatter(t, a, s=40, alpha=0.7, c='tab:blue', marker='o', label='Sensor A')
+    ax.scatter(t, b, s=40, alpha=0.7, c='tab:orange', marker='x', label='Sensor B')
+
+    # Labels, legend, grid and title mirror the notebook cell
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Temperature (°C)')
+    ax.set_title('Sensor readings (scatter)')
+    ax.legend()
+    ax.grid(True)
+
