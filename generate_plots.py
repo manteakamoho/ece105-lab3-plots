@@ -160,3 +160,86 @@ def plot_scatter(timestamps, sensor_a, sensor_b, ax) -> None:
     ax.legend()
     ax.grid(True)
 
+# Create plot_histogram(sensor_a, sensor_b, ax) that draws
+# the histogram from the notebook onto the given Axes object.
+# NumPy-style docstring. Modifies ax in place, returns None.
+
+def plot_histogram(sensor_a, sensor_b, ax):
+    """Draw overlapping histograms of sensor temperature distributions.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        Temperature readings for Sensor A.
+    sensor_b : numpy.ndarray
+        Temperature readings for Sensor B.
+    ax : matplotlib.axes.Axes
+        Axes object to plot on.
+
+    Returns
+    -------
+    None
+    """
+    import numpy as np
+    bins = np.linspace(min(np.min(sensor_a), np.min(sensor_b)),
+                       max(np.max(sensor_a), np.max(sensor_b)), 20)
+    ax.hist(sensor_a, bins=bins, alpha=0.6, color='tab:blue', label='Sensor A', edgecolor='black')
+    ax.hist(sensor_b, bins=bins, alpha=0.6, color='tab:orange', label='Sensor B', edgecolor='black')
+    ax.set_xlabel('Temperature (°C)')
+    ax.set_ylabel('Count')
+    ax.set_title('Histogram of sensor temperatures')
+    ax.legend()
+    ax.grid(axis='y', alpha=0.6)
+
+# Create plot_boxplot(sensor_a, sensor_b, ax) that draws
+# the box plot from the notebook onto the given Axes object.
+# NumPy-style docstring. Modifies ax in place, returns None.
+
+def plot_boxplot(sensor_a, sensor_b, ax):
+    """Draw a side-by-side box plot comparing sensor distributions.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        Temperature readings for Sensor A.
+    sensor_b : numpy.ndarray
+        Temperature readings for Sensor B.
+    ax : matplotlib.axes.Axes
+        Axes object to plot on.
+
+    Returns
+    -------
+    None
+    """
+    import numpy as np
+    ax.boxplot([sensor_a, sensor_b], labels=['Sensor A', 'Sensor B'])
+    ax.set_xlabel('Sensor')
+    ax.set_ylabel('Temperature (deg C)')
+    ax.set_title('Sensor A vs Sensor B Distribution')
+    overall_mean = np.mean(np.concatenate([sensor_a, sensor_b]))
+    ax.axhline(overall_mean, color='red', linestyle='--', label=f'Overall mean: {overall_mean:.2f}')
+    ax.legend()
+
+# Create main() that generates data, creates a 1x3 subplot figure,
+# calls each plot function, adjusts layout, and saves as sensor_analysis.png
+# at 150 DPI with tight bounding box.
+
+def main():
+    """Generate sensor data and save all three plots as sensor_analysis.png.
+
+    Returns
+    -------
+    None
+    """
+    import matplotlib.pyplot as plt
+    t, sensor_a, sensor_b = generate_data(9064)
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    plot_scatter(sensor_a, sensor_b, t, axes[0])
+    plot_histogram(sensor_a, sensor_b, axes[1])
+    plot_boxplot(sensor_a, sensor_b, axes[2])
+    plt.tight_layout()
+    fig.savefig('sensor_analysis.png', dpi=150, bbox_inches='tight')
+    print("Saved sensor_analysis.png")
+
+if __name__ == '__main__':
+    main()
